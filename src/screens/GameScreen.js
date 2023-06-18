@@ -1,0 +1,82 @@
+import React, {useState, useEffect} from 'react'
+import { Text, View, StyleSheet } from 'react-native'
+import { Title } from '../core/Title'
+import { generateRandomBetween } from '../utils/utils'
+import { NumberContainer } from '../core/NumberContainer'
+import { Button } from '../core/Button'
+import {VARS} from '../constants/constants';
+import { Alert } from 'react-native'
+import { Card } from '../core/Card'
+import { InstructionText } from '../core/InstructionText'
+import {Ionicons } from '@expo/vector-icons';
+
+
+export const GameScreen = ({pickedNumber, isGameOver}) => {
+  const initialGuess = generateRandomBetween(1, 100, pickedNumber);
+  const [currentGuess, setCurrentGuess] = useState(initialGuess);
+  useEffect(()=> {
+    if (currentGuess === pickedNumber) {
+      isGameOver(true);
+    }
+  }, [currentGuess, pickedNumber, isGameOver]);
+  const nexInputGuessHandler = (direction) => { // direction // lower, higher
+    if ((direction === 'lower' && currentGuess < pickedNumber) || 
+      (direction === 'greater' && currentGuess > pickedNumber)) {
+        Alert.alert('Dont lie', 'You know that this is wrong...',
+        [{text: 'Sorry', style: 'cancel'}])
+        return;
+    }
+    if (direction === 'lower') {
+      VARS.maxBoundary = currentGuess;
+    } else {
+      VARS.minBoundary = currentGuess + 1;
+    }
+
+    if (pickedNumber === currentGuess) {
+      return;
+    }
+    const newRndNumber = generateRandomBetween(VARS.minBoundary, VARS.maxBoundary, currentGuess);
+    setCurrentGuess(newRndNumber);
+  }
+  return (
+    <View style={styles.screen}>
+      <Title title="Opponent's Guide"/>
+      <NumberContainer>{currentGuess}</NumberContainer>
+      <Card>
+        <InstructionText>
+          Higher or Lower
+        </InstructionText>
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonContainer}>
+            <Button buttonPress={() => nexInputGuessHandler('lower')}>
+              <Ionicons name='md-remove' size={24} color='white'></Ionicons>
+            </Button>
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button buttonPress={() => nexInputGuessHandler('greater')}>
+              <Ionicons name='md-add' size={24} color='white'></Ionicons>
+            </Button>
+          </View>
+        </View>
+        <View>
+          <Text>Log rounds</Text>
+        </View>
+      </Card>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    padding: 24,
+    marginTop: 40
+  },
+  buttonsContainer: {
+    marginTop: 10,
+    flexDirection: 'row'
+  },
+  buttonContainer: {
+    flex: 1
+  }
+})
