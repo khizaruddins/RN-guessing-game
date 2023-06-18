@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
 export default function App() {
   const [userNumber, setUserNumber] = useState();
   const [isOver, setIsGameOver] = useState(false);
+  const [guessRound, setGuessRound] = useState(0);
 
   const [fontsLoaded] = useFonts({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
@@ -32,15 +33,21 @@ export default function App() {
   const pickedNumberHandler = (pickedNumber) => {
     setUserNumber(pickedNumber);
   }
-  const isGameOver = () => {
+  const isGameOver = (numberOfRounds) => {
     setIsGameOver(true);
+    setGuessRound(numberOfRounds);
+  }
+  const startGameHandler = () => {
+    setUserNumber(null);
+    setGuessRound(0);
+    setIsGameOver(false);
   }
   let screen = <StartGameScreen onPickNumber={pickedNumberHandler} />
   if (userNumber) {
     screen = <GameScreen pickedNumber={userNumber} isGameOver={isGameOver}/>
   }
   if (isOver) {
-    screen = <GameOverScreen />
+    screen = <GameOverScreen userNumber={userNumber} roundsNumber={guessRound} onStartNewGame={startGameHandler} />
   }
   return (
     <LinearGradient colors={[Colors.primary650, Colors.secondary500]} style={styles.rootScreen}>
