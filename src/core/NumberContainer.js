@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { Colors } from '../constants/colors'
 
 export const NumberContainer = ({children}) => {
@@ -10,19 +10,21 @@ export const NumberContainer = ({children}) => {
   )
 }
 
+const deviceWidth = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
   container: {
     borderWidth: 2,
     borderColor: Colors.secondary500,
-    padding: 24,
+    padding: deviceWidth > 380 ? 24: 12,
     borderRadius: 8,
-    margin: 24, 
+    margin: deviceWidth > 380 ? 24: 12, 
     alignItems: 'center',
     justifyContent: 'center'
   },
   text: {
     color: Colors.secondary500,
-    fontSize: 36,
+    fontSize: deviceWidth > 380 ? 36: 28,
     fontFamily: 'open-sans-bold'
   }
 })

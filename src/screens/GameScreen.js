@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 24,
-    marginTop: 40
+    marginTop: 40,
+    alignItems: 'center'
   },
   buttonsContainer: {
     marginTop: 10,
